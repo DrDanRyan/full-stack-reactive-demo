@@ -20,7 +20,7 @@ function MovieController($reactive, $scope) {
   $reactive(this).attach($scope);
 
 
-  // Create App State and set default value
+  // Create App State and set default values
   const appState = new ReactiveDict();
   appState.setDefault({
     searchText: ''
@@ -33,7 +33,7 @@ function MovieController($reactive, $scope) {
   });
 
 
-  // Run method to get count of matching movies
+  // Run method to get count of matching movies and bind to View Model
   this.autorun(() => {
     this.call('getCount', appState.get('searchText'), (err, count) => {
       if (err) { return console.log(err); }
@@ -43,13 +43,18 @@ function MovieController($reactive, $scope) {
 
 
   // Subscribe to data from server
-  this.subscribe('movies', () => {
-    const searchText = appState.get('searchText');
-    return [searchText];
+  this.subscribe('movies', () => [appState.get('searchText')]);
+
+  /*
+  Tracker.autorun(() => {
+    Meteor.subscribe('movies', appState.get('searchText'));
   });
+  */
 
 
-  // Bind Server State (Minimongo docs) to View Model
+  // Helpers bind Server State (Minimongo docs) to View Model
+  // Again, Tracker is registering dependencies on reactive data sources behind the scenes and
+  // rerunning when needed.
   this.helpers({
     movies: () => {
       const searchText = appState.get('searchText');
@@ -58,7 +63,7 @@ function MovieController($reactive, $scope) {
   });
 
 
-  // Actions
+  // Actions (Make changes to appState)
   this.setSearchText = () => {
     appState.set('searchText', this.searchText);
   }

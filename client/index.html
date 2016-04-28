@@ -11,14 +11,16 @@
         Clear Search
       </md-button>
 
-
       <md-input-container flex="50" flex-offset="5" id="search-box">
         <label>Search</label>
-        <input type="text" ng-model="ctrl.searchText" ng-model-options="{debounce: 300}" ng-change="ctrl.setSearchText()"/>
+        <input type="text"
+          ng-model="ctrl.searchText"
+          ng-model-options="{debounce: 300}"
+          ng-change="ctrl.setSearchText()"/>
       </md-input-container>
 
       <div flex="20" flex-offset="5" class="md-headline">
-        Matches: {{ctrl.count}}
+        Matches: <b>{{ctrl.count}}</b>
       </div>
     </div>
 
